@@ -416,7 +416,7 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--t1);min-heig
 
     </div></div></div>
 <script>
-var GAS='https://script.google.com/macros/s/AKfycbxOirO5bxpY7LygqrHPBtf6IJ-fpyO-Wiy7I447yyKJorER3Fn9_3oy5PdqA2nFmQRfyg/exec';
+var GAS='https://script.google.com/macros/s/AKfycbzpVhhFAS82MCHAZ5PmCV9B7WcsK56TL7Aqv_SHeHuZycq82CMGPv14bCYj12n7XNd5Gw/exec';
 var SK='stg_gua_tok',ST='STG_GUAYACA_2026';
 var D=null,CH={};
 var PAL=['#06b6d4','#3b82f6','#f59e0b','#10b981','#8b5cf6','#ef4444','#ec4899','#14b8a6','#f97316','#84cc16'];
@@ -452,7 +452,7 @@ function doLogin(){
     return;
   }
 
-  if(GAS==='https://script.google.com/macros/s/AKfycbxOirO5bxpY7LygqrHPBtf6IJ-fpyO-Wiy7I447yyKJorER3Fn9_3oy5PdqA2nFmQRfyg/exec'){
+  if(GAS==='YOUR_DEPLOYED_GAS_URL_HERE'){
     // GAS no configurado: mostrar instruccion al administrador
     err.innerHTML='Sistema no configurado. El administrador debe registrar la URL del servicio. Contacte a <a href="mailto:pbejarano@consorciostg.com.ec" style="color:#67e8f9">pbejarano@consorciostg.com.ec</a>';
     err.classList.add('show');
@@ -479,7 +479,7 @@ function doLogin(){
   } else {
     // GitHub Pages: llamar GAS via fetch (URL publica con ?action=login)
     var url=GAS+'?action=login&u='+encodeURIComponent(u)+'&p='+encodeURIComponent(p);
-    fetch(url)
+    fetch(url,{method:'GET',redirect:'follow'})
       .then(function(res){return res.json();})
       .then(function(r){
         btn.textContent='Acceder al Sistema';btn.disabled=false;
@@ -535,7 +535,7 @@ function boot(){
 }
 function loadData(){
   document.getElementById('lo').style.display='flex';
-  if(GAS==='https://script.google.com/macros/s/AKfycbxOirO5bxpY7LygqrHPBtf6IJ-fpyO-Wiy7I447yyKJorER3Fn9_3oy5PdqA2nFmQRfyg/exec'){
+  if(GAS==='YOUR_DEPLOYED_GAS_URL_HERE'){
     document.getElementById('lo').style.display='none';
     alert('Sistema no configurado. Contacte a pbejarano@consorciostg.com.ec');
     return;
@@ -556,7 +556,7 @@ function loadData(){
   } else {
     // GitHub Pages: fetch a GAS
     var url=GAS+'?action=data&tok='+encodeURIComponent(ST);
-    fetch(url)
+    fetch(url,{method:'GET',redirect:'follow'})
       .then(function(res){return res.json();})
       .then(function(d){
         document.getElementById('lo').style.display='none';
