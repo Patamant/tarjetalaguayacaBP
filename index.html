@@ -49,7 +49,7 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--t1);min-heig
 .lf-btn{width:100%;padding:14px;margin-top:8px;background:linear-gradient(135deg,#0a2472,var(--blue));border:none;border-radius:8px;color:#fff;font-family:'Sora',sans-serif;font-size:.88rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;box-shadow:0 4px 24px rgba(26,95,240,.4);transition:opacity .2s,transform .15s}
 .lf-btn:hover{opacity:.92;transform:translateY(-1px)}
 .lf-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
-.lf-err{display:none;margin-top:16px;padding:12px 16px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25);border-left:3px solid var(--rd);border-radius:8px;font-size:.82rem;color:var(--rdl)}
+.lf-err{display:none;margin-top:16px;padding:12px 16px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25);border-left:3px solid var(--rd);border-radius:8px;font-size:.82rem;color:var(--rdl)}.lf-err a{color:var(--cyl);text-decoration:underline}
 .lf-err.show{display:block}
 .lf-sec{margin-top:28px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:.69rem;color:var(--t3)}
 #app{display:none;min-height:100vh}
@@ -228,7 +228,7 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--t1);min-heig
       <div class="lf-field"><label class="lf-lbl">Usuario</label><input type="text" id="lu" class="lf-inp" placeholder="Nombre de usuario" autocomplete="off" spellcheck="false"></div>
       <div class="lf-field"><label class="lf-lbl">Contrasena</label><input type="password" id="lp" class="lf-inp" placeholder="..........."></div>
       <button class="lf-btn" id="lb" onclick="doLogin()">Acceder al Sistema</button>
-      <div class="lf-err" id="le">Usuario o contrasena incorrectos.</div>
+      <div class="lf-err" id="le">Verifique sus credenciales e intente nuevamente.</div>
       <div class="lf-sec">Sesion protegida - Conexion cifrada</div>
     </div>
   </div>
@@ -416,7 +416,7 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--t1);min-heig
 
     </div></div></div>
 <script>
-var GAS='https://script.google.com/macros/s/AKfycbz1bh5u-e9tUQJzlg1jE9LHEpiaW8iSQV5Zvl7lE-vNkrIIxE_8fPf-OZ_Cu1Mt3gAHMw/exec';
+var GAS='https://script.google.com/macros/s/AKfycbxOirO5bxpY7LygqrHPBtf6IJ-fpyO-Wiy7I447yyKJorER3Fn9_3oy5PdqA2nFmQRfyg/exec';
 var SK='stg_gua_tok',ST='STG_GUAYACA_2026';
 var D=null,CH={};
 var PAL=['#06b6d4','#3b82f6','#f59e0b','#10b981','#8b5cf6','#ef4444','#ec4899','#14b8a6','#f97316','#84cc16'];
@@ -445,19 +445,70 @@ function doLogin(){
   var p=document.getElementById('lp').value.trim();
   var err=document.getElementById('le'),btn=document.getElementById('lb');
   err.classList.remove('show');
-  if(!u||!p){err.textContent='Complete todos los campos.';err.classList.add('show');return;}
-  btn.textContent='Verificando...';btn.disabled=true;
-  if(GAS!=='https://script.google.com/macros/s/AKfycbz1bh5u-e9tUQJzlg1jE9LHEpiaW8iSQV5Zvl7lE-vNkrIIxE_8fPf-OZ_Cu1Mt3gAHMw/exec'){
+
+  if(!u||!p){
+    err.textContent='Complete todos los campos.';
+    err.classList.add('show');
+    return;
+  }
+
+  if(GAS==='https://script.google.com/macros/s/AKfycbxOirO5bxpY7LygqrHPBtf6IJ-fpyO-Wiy7I447yyKJorER3Fn9_3oy5PdqA2nFmQRfyg/exec'){
+    // GAS no configurado: mostrar instruccion al administrador
+    err.innerHTML='Sistema no configurado. El administrador debe registrar la URL del servicio. Contacte a <a href="mailto:pbejarano@consorciostg.com.ec" style="color:#67e8f9">pbejarano@consorciostg.com.ec</a>';
+    err.classList.add('show');
+    return;
+  }
+
+  btn.textContent='Verificando...';
+  btn.disabled=true;
+
+  // Determinar si estamos dentro de GAS (iframe) o en GitHub Pages (fetch)
+  if(typeof google!=='undefined'&&google.script&&google.script.run){
+    // Ejecutando dentro de Google Apps Script
     google.script.run
-      .withSuccessHandler(function(r){btn.textContent='Acceder al Sistema';btn.disabled=false;if(r&&r.success){saveU(u);boot();}else{err.textContent='Credenciales incorrectas.';err.classList.add('show');}})
-      .withFailureHandler(function(){btn.textContent='Acceder al Sistema';btn.disabled=false;err.textContent='Error de conexion.';err.classList.add('show');})
+      .withSuccessHandler(function(r){
+        btn.textContent='Acceder al Sistema';btn.disabled=false;
+        handleLoginResult(r,u);
+      })
+      .withFailureHandler(function(e){
+        btn.textContent='Acceder al Sistema';btn.disabled=false;
+        err.textContent='Error de conexion con el servidor. Intente nuevamente.';
+        err.classList.add('show');
+      })
       .validateLogin(u,p);
   } else {
-    setTimeout(function(){
-      btn.textContent='Acceder al Sistema';btn.disabled=false;
-      if(u==='Usuario 1'&&p==='pass1'){saveU(u);boot();}
-      else{err.textContent='Credenciales incorrectas. (Demo: Usuario 1 / pass1)';err.classList.add('show');}
-    },600);
+    // GitHub Pages: llamar GAS via fetch (URL publica con ?action=login)
+    var url=GAS+'?action=login&u='+encodeURIComponent(u)+'&p='+encodeURIComponent(p);
+    fetch(url)
+      .then(function(res){return res.json();})
+      .then(function(r){
+        btn.textContent='Acceder al Sistema';btn.disabled=false;
+        handleLoginResult(r,u);
+      })
+      .catch(function(){
+        btn.textContent='Acceder al Sistema';btn.disabled=false;
+        err.textContent='Error de conexion con el servidor. Intente nuevamente.';
+        err.classList.add('show');
+      });
+  }
+}
+
+function handleLoginResult(r,u){
+  var err=document.getElementById('le');
+  if(!r){
+    err.textContent='Error inesperado. Intente nuevamente.';
+    err.classList.add('show');
+    return;
+  }
+  if(r.success){
+    saveU(u);
+    boot();
+  } else if(r.notFound){
+    err.innerHTML='Usuario no registrado. Env&iacute;a la solicitud a <a href="mailto:pbejarano@consorciostg.com.ec" style="color:#67e8f9;text-decoration:underline">pbejarano@consorciostg.com.ec</a>';
+    err.classList.add('show');
+  } else {
+    err.textContent='Contrasena incorrecta. Verifique sus credenciales.';
+    err.classList.add('show');
   }
 }
 
@@ -484,13 +535,38 @@ function boot(){
 }
 function loadData(){
   document.getElementById('lo').style.display='flex';
-  if(GAS!=='https://script.google.com/macros/s/AKfycbz1bh5u-e9tUQJzlg1jE9LHEpiaW8iSQV5Zvl7lE-vNkrIIxE_8fPf-OZ_Cu1Mt3gAHMw/exec'){
+  if(GAS==='https://script.google.com/macros/s/AKfycbxOirO5bxpY7LygqrHPBtf6IJ-fpyO-Wiy7I447yyKJorER3Fn9_3oy5PdqA2nFmQRfyg/exec'){
+    document.getElementById('lo').style.display='none';
+    alert('Sistema no configurado. Contacte a pbejarano@consorciostg.com.ec');
+    return;
+  }
+  if(typeof google!=='undefined'&&google.script&&google.script.run){
+    // Dentro de GAS
     google.script.run
-      .withSuccessHandler(function(d){document.getElementById('lo').style.display='none';if(d&&!d.error){D=d;renderAll();}else alert('Error: '+(d?d.error:'desconocido'));})
-      .withFailureHandler(function(e){document.getElementById('lo').style.display='none';alert('Error: '+e.message);})
+      .withSuccessHandler(function(d){
+        document.getElementById('lo').style.display='none';
+        if(d&&!d.error){D=d;renderAll();}
+        else alert('Error cargando datos: '+(d?d.error:'desconocido'));
+      })
+      .withFailureHandler(function(e){
+        document.getElementById('lo').style.display='none';
+        alert('Error: '+e.message);
+      })
       .getDashboardData(ST);
   } else {
-    setTimeout(function(){document.getElementById('lo').style.display='none';D=demo();renderAll();},1400);
+    // GitHub Pages: fetch a GAS
+    var url=GAS+'?action=data&tok='+encodeURIComponent(ST);
+    fetch(url)
+      .then(function(res){return res.json();})
+      .then(function(d){
+        document.getElementById('lo').style.display='none';
+        if(d&&!d.error){D=d;renderAll();}
+        else alert('Error: '+(d?d.error:'desconocido'));
+      })
+      .catch(function(e){
+        document.getElementById('lo').style.display='none';
+        alert('Error de conexion: '+e.message);
+      });
   }
 }
 
