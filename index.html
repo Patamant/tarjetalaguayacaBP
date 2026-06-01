@@ -416,7 +416,7 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--t1);min-heig
 
     </div></div></div>
 <script>
-var GAS='https://script.google.com/macros/s/AKfycbxH_H6WI89HHXd7NlKP_4hV2SfLSv1YKMYjgrUMxX5Lb7fAPyuSQttgN6DXUL-hg6gbBQ/exec';
+var GAS='https://script.google.com/macros/s/AKfycbyT_WV3pUulH4aKzWxWEgkeLDjvGEYqGKKgzrCF6KWyUNHvKBrmRs7Dn5twKsgqlf1R3Q/exec';
 var SK='stg_gua_tok',ST='STG_GUAYACA_2026';
 var D=null,CH={};
 var PAL=['#06b6d4','#3b82f6','#f59e0b','#10b981','#8b5cf6','#ef4444','#ec4899','#14b8a6','#f97316','#84cc16'];
@@ -447,7 +447,7 @@ function doLogin(){
   err.classList.remove('show');
   if(!u||!p){err.textContent='Complete todos los campos.';err.classList.add('show');return;}
   btn.textContent='Verificando...';btn.disabled=true;
-  if(GAS!=='https://script.google.com/macros/s/AKfycbxH_H6WI89HHXd7NlKP_4hV2SfLSv1YKMYjgrUMxX5Lb7fAPyuSQttgN6DXUL-hg6gbBQ/exec'){
+  if(GAS!=='https://script.google.com/macros/s/AKfycbyT_WV3pUulH4aKzWxWEgkeLDjvGEYqGKKgzrCF6KWyUNHvKBrmRs7Dn5twKsgqlf1R3Q/exec'){
     google.script.run
       .withSuccessHandler(function(r){btn.textContent='Acceder al Sistema';btn.disabled=false;if(r&&r.success){saveU(u);boot();}else{err.textContent='Credenciales incorrectas.';err.classList.add('show');}})
       .withFailureHandler(function(){btn.textContent='Acceder al Sistema';btn.disabled=false;err.textContent='Error de conexion.';err.classList.add('show');})
@@ -484,7 +484,7 @@ function boot(){
 }
 function loadData(){
   document.getElementById('lo').style.display='flex';
-  if(GAS!=='https://script.google.com/macros/s/AKfycbxH_H6WI89HHXd7NlKP_4hV2SfLSv1YKMYjgrUMxX5Lb7fAPyuSQttgN6DXUL-hg6gbBQ/exec'){
+  if(GAS!=='https://script.google.com/macros/s/AKfycbyT_WV3pUulH4aKzWxWEgkeLDjvGEYqGKKgzrCF6KWyUNHvKBrmRs7Dn5twKsgqlf1R3Q/exec'){
     google.script.run
       .withSuccessHandler(function(d){document.getElementById('lo').style.display='none';if(d&&!d.error){D=d;renderAll();}else alert('Error: '+(d?d.error:'desconocido'));})
       .withFailureHandler(function(e){document.getElementById('lo').style.display='none';alert('Error: '+e.message);})
