@@ -1037,7 +1037,7 @@ body {
             <span class="sec-num">01</span>
             <div>
               <h2>Tarjetas Entregadas</h2>
-              <p>Distribución de tarjetas vendidas · Col. G = "VENTA"</p>
+              <p>Tarjetas únicas registradas · Hoja DATA col. D · agrupadas por mes (col. Q)</p>
             </div>
           </div>
           <span class="sec-tag blue">Parte I</span>
@@ -1071,7 +1071,7 @@ body {
             </div>
             <div class="cc-explain">
               <div class="cc-explain-icon">💡</div>
-              <span>Cada barra representa el <strong>total de tarjetas entregadas</strong> en ese mes. El pico más alto indica el mes de mayor distribución de la campaña Enroll.</span>
+              <span>Cada barra muestra las <strong>tarjetas únicas nuevas</strong> registradas en DATA ese mes (col. D, agrupadas por col. Q). El total acumulado es 8,507 tarjetas entregadas: 2,644 en Abril y 3,219 nuevas en Mayo.</span>
             </div>
             <div class="chart-wrap" style="height:240px"><canvas id="chartVenta"></canvas></div>
           </div>
@@ -1100,7 +1100,7 @@ body {
             <span class="sec-num">02</span>
             <div>
               <h2>Recargas en Máquinas MVRTS</h2>
-              <p>Tarjetas de campaña Enroll · Transacciones tipo RECARGA</p>
+              <p>Total filas hoja DATA · cada fila = 1 transacción de recarga</p>
             </div>
           </div>
           <span class="sec-tag gold">Parte II</span>
@@ -1134,7 +1134,7 @@ body {
             </div>
             <div class="cc-explain">
               <div class="cc-explain-icon">💡</div>
-              <span>Muestra la <strong>demanda mensual de recargas</strong> en las máquinas MVRTS. Un crecimiento sostenido indica mayor adopción y retención de usuarios.</span>
+              <span>Cada barra es el <strong>total de transacciones de recarga</strong> en ese mes (total filas hoja DATA por mes). Total: 35,101 recargas — 8,136 en Abril y 26,965 en Mayo, reflejando el crecimiento acelerado de adopción.</span>
             </div>
             <div class="chart-wrap" style="height:240px"><canvas id="chartRecarga"></canvas></div>
           </div>
@@ -1203,7 +1203,7 @@ body {
           </div>
           <div class="cc-explain">
             <div class="cc-explain-icon">💡</div>
-            <span>Compara mes a mes los usos de tarjetas <strong>ENROLL</strong> (campaña La Guayaca) versus <strong>Otras Campañas</strong>. Permite medir el peso relativo de la campaña dentro del total transaccional.</span>
+            <span>Desglosa el total de 35,101 usos entre <strong>ENROLL</strong> (campaña La Guayaca) y <strong>Otras Campañas</strong>. En Abril: 8,136 usos totales. En Mayo: 26,965 usos — un crecimiento de 231%. Permite medir el peso de La Guayaca en la transaccionalidad total.</span>
           </div>
           <div class="chart-wrap" style="height:240px"><canvas id="chartUsosMes"></canvas></div>
           <div class="legend" style="margin-top:14px">
@@ -1222,7 +1222,7 @@ body {
           </div>
           <div class="cc-explain">
             <div class="cc-explain-icon">💡</div>
-            <span>La <strong>tasa de activación</strong> muestra qué porcentaje de las tarjetas entregadas han sido efectivamente utilizadas. Una tasa alta indica éxito en la adopción de la tarjeta.</span>
+            <span>De las <strong>8,507 tarjetas entregadas</strong> (únicas en DATA), <strong>4,043 tienen al menos 1 uso</strong> registrado en la hoja USOS — una tasa de activación del 47.5%. Esto indica que casi la mitad de la base ya está activa transaccionalmente.</span>
           </div>
           <div id="activationBars" style="display:flex;flex-direction:column;gap:16px;padding:4px 0"></div>
         </div>
@@ -1234,7 +1234,23 @@ body {
       <div id="sec4">
         <div class="sec-head">
           <div class="sec-head-left">
-            <span class="sec-num">04</span>
+                  <!-- ── Chart: Tarjetas únicas con uso por mes ── -->
+      <div class="chart-card reveal" style="margin-bottom:20px">
+        <div class="cc-head">
+          <div class="cc-head-left">
+            <div class="cc-title">Tarjetas Únicas con Uso por Mes</div>
+            <div class="cc-sub">PANs únicos que registraron al menos 1 uso en cada período · Hoja USOS col. A — Este número es MENOR al total de usos TRX</div>
+          </div>
+          <div class="cc-tag">OKR Tarjetas Activas</div>
+        </div>
+        <div class="cc-explain">
+          <div class="cc-explain-icon">💡</div>
+          <span>Una tarjeta que realizó 10 viajes en abril cuenta como <strong>1 tarjeta activa</strong> en ese mes, pero como <strong>10 usos TRX</strong>. Este gráfico muestra cuántas tarjetas distintas estuvieron activas cada mes.</span>
+        </div>
+        <div class="chart-wrap" style="height:220px"><canvas id="chartUsosUnicas"></canvas></div>
+      </div>
+
+      <span class="sec-num">04</span>
             <div>
               <h2>Análisis de Cosechas</h2>
               <p>Comportamiento de uso por cohorte de tarjetas · Segmentación por mes de venta</p>
@@ -1252,7 +1268,7 @@ body {
           </div>
           <div class="cc-explain">
             <div class="cc-explain-icon">💡</div>
-            <span><strong>Cosecha</strong> = grupo de tarjetas vendidas en el mismo mes. Ej: "Cosecha Abr 26" agrupa todas las tarjetas vendidas en abril 2026. El gráfico muestra cómo <strong>cada cosecha contribuye a la transaccionalidad mensual</strong>. Las tarjetas sin registro de venta en DATA se agrupan como <em>"Otras Cosechas"</em>. Esto permite identificar qué grupos de usuarios son más activos a lo largo del tiempo.</span>
+            <span><strong>Cosecha</strong> = grupo de tarjetas identificadas por mes en hoja DATA (col. O = PAN enmascarado, cruzado con col. A de USOS). La <strong>Cosecha Abr'26</strong> = tarjetas de PAN enmascarado que aparecen en DATA en abril. Las tarjetas en USOS que no se cruzan con DATA → <em>"Otras Cosechas"</em>. Permite ver qué cohorte genera más transacciones a lo largo del tiempo.</span>
           </div>
 
           <div class="cc-divider"></div>
@@ -1286,7 +1302,7 @@ body {
 /* ═══════════════════════════════════════════════
    CONFIG & STATE
 ═══════════════════════════════════════════════ */
-var GAS_URL       = 'https://script.google.com/macros/s/AKfycbxPYc5aA4dY85Y4qyPwTZTlIfUSpwfamg9rZkSnYiewtG8a4d4jBErvd8oxEvJgt5dvUw/exec';
+var GAS_URL       = 'YOUR_DEPLOYED_GAS_URL_HERE';
 var SESSION_KEY   = 'stg_guayaca_token';
 var SESSION_TOKEN = 'STG_GUAYACA_SESSION_2026';
 
@@ -1352,7 +1368,7 @@ function bootDash(){ document.getElementById('loginScreen').style.display='none'
 
 function loadData(){
   document.getElementById('loadingOverlay').style.display='flex';
-  if(GAS_URL!=='YOUR_DEPLOYED_GAS_URL_HERE'){
+  if(GAS_URL!=='https://script.google.com/macros/s/AKfycbxPYc5aA4dY85Y4qyPwTZTlIfUSpwfamg9rZkSnYiewtG8a4d4jBErvd8oxEvJgt5dvUw/exec'){
     google.script.run
       .withSuccessHandler(function(d){ document.getElementById('loadingOverlay').style.display='none'; if(d&&!d.error){dashData=d;renderAll();}else alert('Error: '+(d?d.error:'desconocido')); })
       .withFailureHandler(function(e){ document.getElementById('loadingOverlay').style.display='none'; alert('Error: '+e.message); })
