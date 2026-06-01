@@ -294,7 +294,7 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--t1);min-heig
         <div class="g21">
           <div class="cc rv">
             <div class="cc-h"><div><div class="cc-ti">Tarjetas Entregadas por Mes (OKR 2)</div><div class="cc-su">Count transacciones tipo "Venta" agrupadas por mes (col Q)</div></div><div class="cc-tg">Mensual</div></div>
-            <div class="cc-note"><div class="cc-ni">i</div><span>Cada barra = registros con Tipo "Venta" en ese mes. Permite ver el ritmo mensual de entrega de tarjetas.</span></div>
+            <div class="cc-note"><div class="cc-ni">i</div><span>Si DATA tiene filas tipo "Venta": cuenta esas filas por mes. Si no hay tipo "Venta": cuenta tarjetas unicas (col D) por su primera aparicion en DATA. Total confirmado: 8,507 tarjetas.</span></div>
             <div class="cw" style="height:240px"><canvas id="cV"></canvas></div>
           </div>
           <div class="cc rv">
@@ -318,7 +318,7 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--t1);min-heig
         <div class="g21">
           <div class="cc rv">
             <div class="cc-h"><div><div class="cc-ti">TRX de Recarga por Mes</div><div class="cc-su">Count filas tipo "Recarga" agrupadas por mes</div></div><div class="cc-tg">OKR TRX</div></div>
-            <div class="cc-note"><div class="cc-ni">i</div><span>Total de operaciones de recarga en maquinas MVRTS por mes. Refleja la demanda de saldo en el sistema.</span></div>
+            <div class="cc-note"><div class="cc-ni">i</div><span>Total de transacciones de recarga en maquinas MVRTS por mes (filas hoja DATA con tipo "Recarga"). Cada fila = 1 operacion. El monto se toma de la columna J de DATA.</span></div>
             <div class="cw" style="height:240px"><canvas id="cR"></canvas></div>
           </div>
           <div class="cc rv">
@@ -495,18 +495,23 @@ function loadData(){
 }
 
 function renderAll(){
+  // Mostrar info de debug si existe (ayuda a verificar hojas detectadas)
+  if(D._debug){
+    var dbg=D._debug;
+    console.log('Hojas detectadas:',dbg.sheets);
+    console.log('Filas DATA:',dbg.dataRows,'USOS:',dbg.usosRows);
+    console.log('Tiene tipo Venta:',dbg.hasVenta,'Recargas:',dbg.recargaTipos);
+  }
   renderKPIs();
-  bar('cV',keys(D.data.ventaByMes).map(fM),vals(D.data.ventaByMes),'#06b6d4');
-  dnt('cVD',keys(D.data.ventaByMes).map(fM),vals(D.data.ventaByMes));
-  dntS('vDS',keys(D.data.ventaByMes).map(fM),vals(D.data.ventaByMes));
-  bar('cR',keys(D.data.recargaByMes).map(fM),vals(D.data.recargaByMes),'#f59e0b');
-  dnt('cRD',keys(D.data.recargaByMes).map(fM),vals(D.data.recargaByMes));
-  dntS('rDS',keys(D.data.recargaByMes).map(fM),vals(D.data.recargaByMes));
-  barD('cRM',keys(D.data.recargaMontoByMes).map(fM),vals(D.data.recargaMontoByMes),'#f59e0b');
+  var vK=keys(D.data.ventaByMes),vV=vK.map(function(k){return D.data.ventaByMes[k];});
+  if(vK.length){bar('cV',vK.map(fM),vV,'#06b6d4');dnt('cVD',vK.map(fM),vV);dntS('vDS',vK.map(fM),vV);}
+  var rK=keys(D.data.recargaByMes),rV=rK.map(function(k){return D.data.recargaByMes[k];});
+  if(rK.length){bar('cR',rK.map(fM),rV,'#f59e0b');dnt('cRD',rK.map(fM),rV);dntS('rDS',rK.map(fM),rV);}
+  var mK=keys(D.data.recargaMontoByMes),mV=mK.map(function(k){return D.data.recargaMontoByMes[k];});
+  if(mK.length){barD('cRM',mK.map(fM),mV,'#f59e0b');}
   renderEstado();renderTipo();
-  bar('cUC',keys(D.usos.panUnicosByMes).map(fM),vals(D.usos.panUnicosByMes),'#10b981');
-  dnt('cUCD',keys(D.usos.panUnicosByMes).map(fM),vals(D.usos.panUnicosByMes));
-  dntS('ucDS',keys(D.usos.panUnicosByMes).map(fM),vals(D.usos.panUnicosByMes));
+  var uK=keys(D.usos.panUnicosByMes),uV=uK.map(function(k){return D.usos.panUnicosByMes[k];});
+  if(uK.length){bar('cUC',uK.map(fM),uV,'#10b981');dnt('cUCD',uK.map(fM),uV);dntS('ucDS',uK.map(fM),uV);}
   renderMix();renderAct();renderCos();
 }
 
@@ -696,16 +701,31 @@ function cnt(id,n){var el=document.getElementById(id);if(!el)return;var v=parseF
 function setB(id,p){var el=document.getElementById(id);if(el)el.style.width=Math.max(0,Math.min(100,p||0))+'%';}
 
 function demo(){
+  // DATOS DEMO basados en estructura real:
+  // DATA: solo tiene registros "Recarga" en col G
+  //   => ventaTotal = tarjetas unicas por primera aparicion en DATA
+  //   => recargaTotal = total filas DATA (todas son "Recarga")
+  //   => recargaMonto = suma col J de DATA
+  // USOS: transacciones de pasajes
+  //   => trxTotal = total filas USOS (diferente de recargaTotal)
+  //   => montoTotal = suma col G de USOS (valor de pasajes)
   return{
     data:{
-      ventaTotal:8507,ventaByMes:{'2026-04':2644,'2026-05':5863},
-      recargaTotal:35101,recargaByMes:{'2026-04':8136,'2026-05':26965},
-      recargaMontoTotal:22916.55,recargaMontoByMes:{'2026-04':5308.40,'2026-05':17608.15}
+      ventaTotal:8507,
+      ventaByMes:{'2026-04':2644,'2026-05':5863},
+      recargaTotal:35101,
+      recargaByMes:{'2026-04':8136,'2026-05':26965},
+      recargaMontoTotal:22916.55,
+      recargaMontoByMes:{'2026-04':5308.40,'2026-05':17608.15}
     },
     usos:{
-      panUnicosTotal:4043,panUnicosByMes:{'2026-04':1486,'2026-05':3660},
-      trxTotal:35101,trxByMes:{'2026-04':8136,'2026-05':26965},
-      montoTotal:15795.45,montoAbierto:1240.35,montoCerrado:14555.10,
+      panUnicosTotal:4043,
+      panUnicosByMes:{'2026-04':1486,'2026-05':3660},
+      trxTotal:35101,
+      trxByMes:{'2026-04':8136,'2026-05':26965},
+      montoTotal:15795.45,
+      montoAbierto:1240.35,
+      montoCerrado:14555.10,
       byTipo:{'ENROLL':21630,'OTRAS CAMPANAS':13471},
       byTipoMes:{'ENROLL':{'2026-04':4890,'2026-05':16740},'OTRAS CAMPANAS':{'2026-04':3246,'2026-05':10225}}
     },
