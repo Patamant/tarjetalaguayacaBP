@@ -1046,16 +1046,23 @@ body {
         <div class="kpi-grid">
           <div class="kpi cyan reveal">
             <div class="kpi-icon-bg">💳</div>
-            <div class="kpi-label">Total Tarjetas Entregadas</div>
+            <div class="kpi-label">Total TRX de Venta</div>
             <div class="kpi-val" id="okr1">—</div>
             <div class="kpi-bar"><div class="kpi-bar-fill" id="bar1" style="width:0%"></div></div>
-            <div class="kpi-foot">Transacciones tipo VENTA acumuladas</div>
+            <div class="kpi-foot">Transacciones tipo VENTA · Hoja DATA col. G</div>
           </div>
           <div class="kpi blue reveal">
+            <div class="kpi-icon-bg">🃏</div>
+            <div class="kpi-label">Tarjetas Únicas Vendidas</div>
+            <div class="kpi-val" id="okr1u">—</div>
+            <div class="kpi-bar"><div class="kpi-bar-fill" id="bar1u" style="width:0%"></div></div>
+            <div class="kpi-foot">PANs distintos con al menos 1 VENTA registrada</div>
+          </div>
+          <div class="kpi gold reveal">
             <div class="kpi-icon-bg">📆</div>
             <div class="kpi-label">Meses con Distribución</div>
             <div class="kpi-val" id="okr1m">—</div>
-            <div class="kpi-bar"><div class="kpi-bar-fill" id="bar1m" style="width:0%"></div></div>
+            <div class="kpi-bar"><div class="kpi-bar-fill" style="width:75%"></div></div>
             <div class="kpi-foot">Períodos con actividad de venta registrada</div>
           </div>
         </div>
@@ -1179,31 +1186,57 @@ body {
         <div class="kpi-grid">
           <div class="kpi green reveal">
             <div class="kpi-icon-bg">🎯</div>
-            <div class="kpi-label">Tarjetas Utilizadas</div>
+            <div class="kpi-label">Tarjetas con Uso Registrado</div>
             <div class="kpi-val" id="okr3a">—</div>
             <div class="kpi-bar"><div class="kpi-bar-fill" style="width:0%" id="bar3a"></div></div>
-            <div class="kpi-foot">PANs únicos con al menos 1 uso · Col D hoja USOS</div>
+            <div class="kpi-foot">PANs únicos · Col A hoja USOS</div>
           </div>
           <div class="kpi cyan reveal">
             <div class="kpi-icon-bg">📊</div>
-            <div class="kpi-label">Total de Usos</div>
+            <div class="kpi-label">Total Usos (todas campañas)</div>
             <div class="kpi-val" id="okr3b">—</div>
             <div class="kpi-bar"><div class="kpi-bar-fill" style="width:0%" id="bar3b"></div></div>
-            <div class="kpi-foot">Número total de transacciones registradas</div>
+            <div class="kpi-foot">Filas totales en hoja USOS (ENROLL + OTRAS)</div>
+          </div>
+          <div class="kpi blue reveal">
+            <div class="kpi-icon-bg">⭐</div>
+            <div class="kpi-label">Usos Campaña ENROLL</div>
+            <div class="kpi-val" id="okr3e">—</div>
+            <div class="kpi-bar"><div class="kpi-bar-fill" style="width:0%" id="bar3e"></div></div>
+            <div class="kpi-foot">Usos con TIPO = ENROLL · Col I hoja USOS</div>
           </div>
           <div class="kpi gold reveal">
             <div class="kpi-icon-bg">💵</div>
-            <div class="kpi-label">Valor Total de Usos</div>
+            <div class="kpi-label">Valor Total Usos</div>
             <div class="kpi-val md" id="okr3c">—</div>
             <div class="kpi-bar"><div class="kpi-bar-fill" style="width:75%"></div></div>
-            <div class="kpi-foot">Sumatoria columna G · Hoja USOS (USD)</div>
+            <div class="kpi-foot">Sumatoria col G hoja USOS · USD</div>
           </div>
-          <div class="kpi blue reveal">
+          <div class="kpi green reveal">
             <div class="kpi-icon-bg">🔁</div>
-            <div class="kpi-label">Usos Promedio / Tarjeta</div>
+            <div class="kpi-label">Promedio Usos / Tarjeta</div>
             <div class="kpi-val" id="okr3avg">—</div>
             <div class="kpi-bar"><div class="kpi-bar-fill" style="width:55%"></div></div>
-            <div class="kpi-foot">Frecuencia de uso por tarjeta activa</div>
+            <div class="kpi-foot">Frecuencia promedio de uso por tarjeta activa</div>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="cc-head">
+            <div class="cc-head-left">
+              <div class="cc-title">Usos por Mes · ENROLL vs Otras Campañas</div>
+              <div class="cc-sub">Distribución mensual por tipo de campaña · Hoja USOS col. I</div>
+            </div>
+            <div class="cc-tag">OKR Mensual</div>
+          </div>
+          <div class="cc-explain">
+            <div class="cc-explain-icon">💡</div>
+            <span>Compara mes a mes los usos de tarjetas <strong>ENROLL</strong> (campaña La Guayaca) versus <strong>Otras Campañas</strong>. Permite medir el peso relativo de la campaña dentro del total transaccional.</span>
+          </div>
+          <div class="chart-wrap" style="height:240px"><canvas id="chartUsosMes"></canvas></div>
+          <div class="legend" style="margin-top:14px">
+            <div class="leg-item"><div class="leg-dot" style="background:#06b6d4"></div>ENROLL</div>
+            <div class="leg-item"><div class="leg-dot" style="background:#8b5cf6"></div>Otras Campañas</div>
           </div>
         </div>
 
@@ -1279,9 +1312,9 @@ body {
 
 <script>
 /* ═══════════════════════════════════════════════
-   CONFIG
+   CONFIG & STATE
 ═══════════════════════════════════════════════ */
-var GAS_URL = 'https://script.google.com/macros/s/AKfycbzCN2ry69oXCBiclWUFZIsNZAJvdGlLzMteFvVnRnmfr-6ZpGE30Mw6Qd7se0zCZGBDPA/exec';
+var GAS_URL = 'YOUR_DEPLOYED_GAS_URL_HERE';
 var SESSION_KEY   = 'stg_guayaca_token';
 var SESSION_TOKEN = 'STG_GUAYACA_SESSION_2026';
 
@@ -1289,36 +1322,28 @@ var dashData = null;
 var charts   = {};
 var selMonth = 'all';
 
-/* Chart.js defaults */
 Chart.defaults.font.family = "'Sora', sans-serif";
 Chart.defaults.color = '#475569';
 
-/* Color palette */
 var PAL = [
   '#06b6d4','#3b82f6','#f59e0b','#10b981',
   '#8b5cf6','#ef4444','#ec4899','#14b8a6',
   '#f97316','#84cc16','#0ea5e9','#a855f7'
 ];
 
-/* Month labels */
 var MES = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
 function fmtM(k) {
   if (!k) return k;
   var p = String(k).split('-');
   if (p.length !== 2) return k;
-  return (MES[parseInt(p[1])-1]||p[1]) + ' ' + p[0].slice(2);
+  return (MES[parseInt(p[1])-1]||p[1]) + '\'' + p[0].slice(2);
 }
 
-/* ═══════════════════════════════════════════════
-   INIT
-═══════════════════════════════════════════════ */
+/* ── INIT ── */
 (function init() {
-  tick();
-  setInterval(tick, 1000);
-
+  tick(); setInterval(tick, 1000);
   var tok = sessionStorage.getItem(SESSION_KEY);
   if (tok === SESSION_TOKEN) bootDash();
-
   document.getElementById('loginUser').addEventListener('keydown', function(e){ if(e.key==='Enter') document.getElementById('loginPass').focus(); });
   document.getElementById('loginPass').addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
 })();
@@ -1327,40 +1352,36 @@ function tick() {
   var now = new Date();
   var el = document.getElementById('tbClock');
   if (el) el.textContent =
-    now.toLocaleDateString('es-EC',{weekday:'short',day:'2-digit',month:'short'}) + ' · ' +
+    now.toLocaleDateString('es-EC',{weekday:'short',day:'2-digit',month:'short',year:'2-digit'}) + ' · ' +
     now.toLocaleTimeString('es-EC',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
 }
 
-/* ═══════════════════════════════════════════════
-   AUTH
-═══════════════════════════════════════════════ */
+/* ── AUTH ── */
 function doLogin() {
   var u = document.getElementById('loginUser').value.trim();
   var p = document.getElementById('loginPass').value.trim();
   var err = document.getElementById('loginError');
   var btn = document.getElementById('btnLogin');
   err.classList.remove('show');
-
   if (!u||!p){ err.textContent='Complete todos los campos.'; err.classList.add('show'); return; }
-
   btn.textContent='Verificando…'; btn.disabled=true;
 
-  if (GAS_URL !== 'https://script.google.com/macros/s/AKfycbzCN2ry69oXCBiclWUFZIsNZAJvdGlLzMteFvVnRnmfr-6ZpGE30Mw6Qd7se0zCZGBDPA/exec') {
+  if (GAS_URL !== 'https://script.google.com/macros/s/AKfycbyrw0Z0UnMcn95ZzVKX04sg4Af9ml7RHu75F6UH6VpREzli-C_vVnLQDa7UwZT2fPE86Q/exec') {
     google.script.run
       .withSuccessHandler(function(r){
         btn.textContent='Acceder al Sistema'; btn.disabled=false;
-        if (r&&r.success){ setUser(u); bootDash(); }
+        if(r&&r.success){ setUser(u); bootDash(); }
         else { err.textContent='Credenciales incorrectas.'; err.classList.add('show'); }
       })
       .withFailureHandler(function(){
         btn.textContent='Acceder al Sistema'; btn.disabled=false;
-        err.textContent='Error de conexión. Intente de nuevo.'; err.classList.add('show');
+        err.textContent='Error de conexión.'; err.classList.add('show');
       })
       .validateLogin(u, p);
   } else {
     setTimeout(function(){
       btn.textContent='Acceder al Sistema'; btn.disabled=false;
-      if (u==='Usuario 1' && p==='pass1'){ setUser(u); bootDash(); }
+      if(u==='Usuario 1' && p==='pass1'){ setUser(u); bootDash(); }
       else { err.textContent='Credenciales incorrectas.'; err.classList.add('show'); }
     }, 700);
   }
@@ -1368,8 +1389,10 @@ function doLogin() {
 
 function setUser(u) {
   sessionStorage.setItem(SESSION_KEY, SESSION_TOKEN);
-  document.getElementById('sbAvatar').textContent = u.slice(0,2).toUpperCase();
-  document.getElementById('sbUser').textContent = u;
+  var av = document.getElementById('sbAvatar');
+  var su = document.getElementById('sbUser');
+  if(av) av.textContent = u.slice(0,2).toUpperCase();
+  if(su) su.textContent = u;
 }
 
 function doLogout() {
@@ -1381,14 +1404,9 @@ function doLogout() {
   destroyCharts(); dashData=null;
 }
 
-function scrollSec(id){
-  var el = document.getElementById(id);
-  if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
-}
+function scrollSec(id){ var el=document.getElementById(id); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); }
 
-/* ═══════════════════════════════════════════════
-   BOOT DASHBOARD
-═══════════════════════════════════════════════ */
+/* ── BOOT ── */
 function bootDash() {
   document.getElementById('loginScreen').style.display='none';
   document.getElementById('app').style.display='block';
@@ -1397,7 +1415,7 @@ function bootDash() {
 
 function loadData() {
   document.getElementById('loadingOverlay').style.display='flex';
-  if (GAS_URL !== 'https://script.google.com/macros/s/AKfycbzCN2ry69oXCBiclWUFZIsNZAJvdGlLzMteFvVnRnmfr-6ZpGE30Mw6Qd7se0zCZGBDPA/exec') {
+  if (GAS_URL !== 'https://script.google.com/macros/s/AKfycbyrw0Z0UnMcn95ZzVKX04sg4Af9ml7RHu75F6UH6VpREzli-C_vVnLQDa7UwZT2fPE86Q/exec') {
     google.script.run
       .withSuccessHandler(function(d){
         document.getElementById('loadingOverlay').style.display='none';
@@ -1412,18 +1430,17 @@ function loadData() {
   } else {
     setTimeout(function(){
       document.getElementById('loadingOverlay').style.display='none';
-      dashData=getDemoData(); renderAll();
-    }, 1600);
+      dashData = getDemoData();
+      renderAll();
+    }, 1500);
   }
 }
 
-/* ═══════════════════════════════════════════════
-   RENDER
-═══════════════════════════════════════════════ */
 function renderAll() {
   renderKPIs();
   renderVenta();
   renderRecarga();
+  renderUsosMes();
   renderActivation();
   renderCosechas();
 }
@@ -1431,115 +1448,163 @@ function renderAll() {
 /* ── KPIs ── */
 function renderKPIs() {
   var p1=dashData.parte1, p2=dashData.parte2, p3=dashData.parte3;
-  var meses = Object.keys(p1.ventaByMonth).length;
 
-  cnt('okr1',  p1.totalTarjetasEntregadas);
-  cnt('okr1m', meses);
+  // PARTE 1 — Tarjetas
+  cnt('okr1',  p1.totalTarjetasEntregadas);   // Total TRX tipo VENTA
+  cnt('okr1u', p1.tarjetasUnicas);             // Tarjetas únicas vendidas
+  cnt('okr1m', Object.keys(p1.ventaByMonth).length); // Meses
+
+  // PARTE 2 — Recargas
   cnt('okr2',  p2.totalRecarga);
   cnt('okr2u', p2.uniqueRecargaCards);
-  cnt('okr3a', p3.totalTarjetasUtilizadas);
-  cnt('okr3b', p3.totalUsos);
-  document.getElementById('okr3c').textContent = '$ '+p3.valorTotalUsos.toLocaleString('es-EC',{minimumFractionDigits:2});
-  var avg2 = p2.uniqueRecargaCards > 0 ? (p2.totalRecarga/p2.uniqueRecargaCards).toFixed(1) : '—';
+  var avg2 = p2.uniqueRecargaCards>0 ? (p2.totalRecarga/p2.uniqueRecargaCards).toFixed(1) : '0';
   document.getElementById('okr2avg').textContent = avg2;
-  var avg3 = p3.totalTarjetasUtilizadas > 0 ? (p3.totalUsos/p3.totalTarjetasUtilizadas).toFixed(1) : '—';
+
+  // PARTE 3 — Usos
+  cnt('okr3a', p3.totalTarjetasUtilizadas);   // PANs únicos en USOS
+  cnt('okr3b', p3.totalUsos);                  // Total filas USOS
+  cnt('okr3e', p3.totalUsosEnroll);            // Solo ENROLL
+  document.getElementById('okr3c').textContent = '$ ' + p3.valorTotalUsos.toLocaleString('es-EC',{minimumFractionDigits:2,maximumFractionDigits:2});
+  var avg3 = p3.totalTarjetasUtilizadas>0 ? (p3.totalUsos/p3.totalTarjetasUtilizadas).toFixed(1) : '0';
   document.getElementById('okr3avg').textContent = avg3;
 
-  /* Hero */
+  // Hero strip
   cnt('hKpi1', p1.totalTarjetasEntregadas);
   cnt('hKpi2', p2.totalRecarga);
   cnt('hKpi3', p3.totalUsos);
 
-  /* Progress bars */
+  // Progress bars
   setTimeout(function(){
     setBar('bar1',  100);
-    setBar('bar1m', Math.min(meses/12*100, 100));
+    setBar('bar1u', p1.tarjetasUnicas/Math.max(p1.totalTarjetasEntregadas,1)*100);
     setBar('bar2',  100);
-    setBar('bar2u', p2.uniqueRecargaCards/p2.totalRecarga*100);
-    setBar('bar3a', p3.totalTarjetasUtilizadas/p1.totalTarjetasEntregadas*100);
+    setBar('bar2u', p2.uniqueRecargaCards/Math.max(p2.totalRecarga,1)*100);
+    setBar('bar3a', p3.totalTarjetasUtilizadas/Math.max(p1.tarjetasUnicas,1)*100);
     setBar('bar3b', 100);
-  }, 300);
+    setBar('bar3e', p3.totalUsosEnroll/Math.max(p3.totalUsos,1)*100);
+  }, 400);
 }
 
 function cnt(id, target) {
   var el=document.getElementById(id); if(!el) return;
-  var dur=900, t0=null;
-  (function step(ts){
-    if(!t0) t0=ts;
-    var prog=Math.min((ts-t0)/dur,1);
-    var ease=1-Math.pow(1-prog,3);
-    el.textContent=Math.round(ease*target).toLocaleString('es-EC');
-    if(prog<1) requestAnimationFrame(step);
-  })(performance.now());
+  var n=parseFloat(target)||0;
+  if(n===Math.floor(n)) {
+    var dur=900, t0=null;
+    (function step(ts){ if(!t0)t0=ts; var p=Math.min((ts-t0)/dur,1); var e=1-Math.pow(1-p,3); el.textContent=Math.round(e*n).toLocaleString('es-EC'); if(p<1)requestAnimationFrame(step); })(performance.now());
+  } else {
+    el.textContent = n.toLocaleString('es-EC',{minimumFractionDigits:1,maximumFractionDigits:1});
+  }
 }
 
 function setBar(id, pct) {
   var el=document.getElementById(id); if(!el) return;
-  el.style.width = Math.max(0,Math.min(100,pct||0))+'%';
+  el.style.width=Math.max(0,Math.min(100,pct||0))+'%';
 }
 
-/* ── Venta chart + donut ── */
+/* ── Venta Chart ── */
 function renderVenta() {
-  var m = dashData.parte1.ventaByMonth;
-  var keys = Object.keys(m), vals = Object.values(m);
+  var m=dashData.parte1.ventaByMonth;
+  var keys=Object.keys(m), vals=Object.values(m);
+  if(!keys.length) return;
   makeBar('chartVenta', keys.map(fmtM), vals, '#06b6d4', '#0891b2');
   makeDonut('chartVentaDonnut', keys.map(fmtM), vals);
   buildDonutStats('ventaDonutStats', keys.map(fmtM), vals, PAL);
 }
 
+/* ── Recarga Chart ── */
 function renderRecarga() {
-  var m = dashData.parte2.recargaByMonth;
-  var keys = Object.keys(m), vals = Object.values(m);
+  var m=dashData.parte2.recargaByMonth;
+  var keys=Object.keys(m), vals=Object.values(m);
+  if(!keys.length) return;
   makeBar('chartRecarga', keys.map(fmtM), vals, '#f59e0b', '#d97706');
   makeDonut('chartRecargaDonut', keys.map(fmtM), vals);
   buildDonutStats('recargaDonutStats', keys.map(fmtM), vals, PAL);
 }
 
-/* ── Activation bars ── */
+/* ── Usos por Mes ── */
+function renderUsosMes() {
+  var p3=dashData.parte3;
+  var mTotal=p3.usosByMonth||{};
+  var mEnroll=p3.usosEnrollByMonth||{};
+
+  // Unir todas las claves de mes
+  var allKeys={};
+  Object.keys(mTotal).forEach(function(k){allKeys[k]=true;});
+  Object.keys(mEnroll).forEach(function(k){allKeys[k]=true;});
+  var keys=Object.keys(allKeys).sort();
+  if(!keys.length) return;
+
+  var vTotal=keys.map(function(k){return mTotal[k]||0;});
+  var vEnroll=keys.map(function(k){return mEnroll[k]||0;});
+  var vOtras=keys.map(function(k){return (mTotal[k]||0)-(mEnroll[k]||0);});
+  var labels=keys.map(fmtM);
+
+  if(charts.usosM) charts.usosM.destroy();
+  var ctx=document.getElementById('chartUsosMes');
+  if(!ctx) return;
+  ctx=ctx.getContext('2d');
+
+  charts.usosM = new Chart(ctx, {
+    type:'bar',
+    data:{
+      labels:labels,
+      datasets:[
+        {label:'ENROLL',data:vEnroll,backgroundColor:'#06b6d4bb',borderColor:'#06b6d4',borderWidth:1.5,borderRadius:5,borderSkipped:false,maxBarThickness:56},
+        {label:'Otras Campañas',data:vOtras,backgroundColor:'#8b5cf6bb',borderColor:'#8b5cf6',borderWidth:1.5,borderRadius:5,borderSkipped:false,maxBarThickness:56}
+      ]
+    },
+    options: stackedOpts()
+  });
+}
+
+/* ── Activation ── */
 function renderActivation() {
   var p1=dashData.parte1, p3=dashData.parte3;
-  var total = p1.totalTarjetasEntregadas;
-  var used  = p3.totalTarjetasUtilizadas;
-  var pct   = total > 0 ? (used/total*100).toFixed(1) : 0;
+  var totalV=p1.tarjetasUnicas;
+  var used=p3.totalTarjetasUtilizadas;
+  var enroll=p3.totalTarjetasEnroll||0;
+  var pctUsed=totalV>0?(used/totalV*100):0;
+  var pctEnroll=totalV>0?(enroll/totalV*100):0;
 
-  var el = document.getElementById('activationBars');
-  el.innerHTML = [
-    { label:'Tarjetas Entregadas', val:total, pct:100, color:'#3b82f6' },
-    { label:'Tarjetas con Uso Registrado', val:used, pct:parseFloat(pct), color:'#10b981' },
-    { label:'Sin Uso Todavía', val:total-used, pct:(100-parseFloat(pct)), color:'#475569' }
+  var el=document.getElementById('activationBars');
+  if(!el) return;
+
+  el.innerHTML=[
+    {label:'Tarjetas Vendidas (únicas)', val:totalV, pct:100, color:'#3b82f6'},
+    {label:'Con al menos 1 uso (total)', val:used, pct:pctUsed, color:'#10b981'},
+    {label:'Con uso ENROLL específico', val:enroll, pct:pctEnroll, color:'#06b6d4'},
+    {label:'Sin uso registrado', val:Math.max(totalV-used,0), pct:Math.max(100-pctUsed,0), color:'#475569'}
   ].map(function(r){
-    return '<div style="display:flex;align-items:center;gap:16px">'+
-      '<div style="flex:0 0 220px;font-size:0.75rem;color:var(--t2);font-weight:500">'+r.label+'</div>'+
-      '<div style="flex:1;height:10px;background:var(--bg3);border-radius:5px;overflow:hidden">'+
-        '<div style="height:100%;width:'+r.pct+'%;background:'+r.color+';border-radius:5px;transition:width 1.2s cubic-bezier(0.4,0,0.2,1)"></div>'+
+    return '<div style="display:flex;align-items:center;gap:14px;margin-bottom:12px">'+
+      '<div style="flex:0 0 230px;font-size:0.73rem;color:var(--t2);font-weight:500">'+r.label+'</div>'+
+      '<div style="flex:1;height:9px;background:var(--bg3);border-radius:5px;overflow:hidden">'+
+        '<div style="height:100%;width:'+r.pct.toFixed(1)+'%;background:'+r.color+';border-radius:5px;transition:width 1.3s cubic-bezier(0.4,0,0.2,1)"></div>'+
       '</div>'+
-      '<div style="flex:0 0 100px;text-align:right;font-family:JetBrains Mono,monospace;font-size:0.8rem;color:var(--t1);font-weight:600">'+
-        r.val.toLocaleString('es-EC')+' <span style="color:var(--t3);font-size:0.67rem">('+r.pct.toFixed(1)+'%)</span>'+
+      '<div style="flex:0 0 120px;text-align:right;font-family:JetBrains Mono,monospace;font-size:0.78rem;color:var(--t1);font-weight:600">'+
+        r.val.toLocaleString('es-EC')+' <span style="color:var(--t3);font-size:0.65rem">('+r.pct.toFixed(1)+'%)</span>'+
       '</div>'+
     '</div>';
   }).join('');
 
-  /* Animate after paint */
   setTimeout(function(){
     el.querySelectorAll('div>div>div').forEach(function(b){
       var w=b.style.width; b.style.width='0%';
-      setTimeout(function(){ b.style.width=w; }, 50);
+      setTimeout(function(){b.style.width=w;},60);
     });
-  }, 100);
+  },100);
 }
 
 /* ── Cosechas ── */
 function renderCosechas() {
-  var c = dashData.cosechas;
-  if (!c||!c.labels||!c.labels.length) return;
+  var c=dashData.cosechas;
+  if(!c||!c.labels||!c.labels.length) return;
 
-  /* Filter chips */
-  var fb = document.getElementById('cosechaFilters');
-  fb.innerHTML = '<span class="filter-strip-label">Período de análisis</span>';
+  var fb=document.getElementById('cosechaFilters');
+  fb.innerHTML='<span class="filter-strip-label">Período de análisis</span>';
   ['all'].concat(c.labels).forEach(function(m){
     var btn=document.createElement('button');
     btn.className='fchip'+(m==='all'?' active':'');
-    btn.textContent = m==='all' ? 'Vista Total' : fmtM(m);
+    btn.textContent=m==='all'?'Vista Total':fmtM(m);
     btn.dataset.m=m;
     btn.onclick=function(){
       fb.querySelectorAll('.fchip').forEach(function(b){b.classList.remove('active');});
@@ -1556,157 +1621,151 @@ function renderCosechas() {
 function renderCosechaTotal(c) {
   if(charts.cosTotal) charts.cosTotal.destroy();
   var ctx=document.getElementById('chartCosechaTotal').getContext('2d');
-  charts.cosTotal = new Chart(ctx, {
+  charts.cosTotal=new Chart(ctx,{
     type:'bar',
     data:{
-      labels: c.labels.map(fmtM),
-      datasets: c.series.map(function(lbl,i){
-        return { label:lbl, data:c.data[i],
-          backgroundColor:PAL[i%PAL.length]+'bb',
-          borderColor:PAL[i%PAL.length],
-          borderWidth:1.5, borderRadius:5, borderSkipped:false, maxBarThickness:64 };
+      labels:c.labels.map(fmtM),
+      datasets:c.series.map(function(lbl,i){
+        return{label:lbl,data:c.data[i],backgroundColor:PAL[i%PAL.length]+'bb',borderColor:PAL[i%PAL.length],borderWidth:1.5,borderRadius:5,borderSkipped:false,maxBarThickness:64};
       })
     },
-    options: stackedOpts()
+    options:stackedOpts()
   });
-  buildLegend('legendTotal', c.series);
+  buildLegend('legendTotal',c.series,c.totals);
 }
 
 function renderCosechaMonth(month) {
   var c=dashData.cosechas;
   if(charts.cosMon) charts.cosMon.destroy();
   var ctx=document.getElementById('chartCosechaMonth').getContext('2d');
-  var ds, labs;
+  var ds,labs;
 
-  if (month==='all') {
-    labs = c.labels.map(fmtM);
-    ds = c.series.map(function(lbl,i){
-      return { label:lbl, data:c.data[i],
-        backgroundColor:PAL[i%PAL.length]+'bb',
-        borderColor:PAL[i%PAL.length],
-        borderWidth:1.5, borderRadius:5, borderSkipped:false, maxBarThickness:64 };
+  if(month==='all'){
+    labs=c.labels.map(fmtM);
+    ds=c.series.map(function(lbl,i){
+      return{label:lbl,data:c.data[i],backgroundColor:PAL[i%PAL.length]+'bb',borderColor:PAL[i%PAL.length],borderWidth:1.5,borderRadius:5,borderSkipped:false,maxBarThickness:64};
     });
-    charts.cosMon = new Chart(ctx,{type:'bar',data:{labels:labs,datasets:ds},options:stackedOpts()});
-    buildLegend('legendMonth', c.series);
+    charts.cosMon=new Chart(ctx,{type:'bar',data:{labels:labs,datasets:ds},options:stackedOpts()});
+    buildLegend('legendMonth',c.series,c.totals);
   } else {
     var idx=c.labels.indexOf(month);
-    labs = c.series;
-    var vals = idx>=0 ? c.series.map(function(_,i){return c.data[i][idx]||0;}) : c.series.map(function(){return 0;});
-    ds=[{ label:fmtM(month), data:vals,
+    labs=c.series;
+    var vals=idx>=0?c.series.map(function(_,i){return c.data[i][idx]||0;}):c.series.map(function(){return 0;});
+    ds=[{label:fmtM(month),data:vals,
       backgroundColor:c.series.map(function(_,i){return PAL[i%PAL.length]+'bb';}),
       borderColor:c.series.map(function(_,i){return PAL[i%PAL.length];}),
-      borderWidth:1.5, borderRadius:8, borderSkipped:false, maxBarThickness:52 }];
-    charts.cosMon = new Chart(ctx,{type:'bar',data:{labels:labs,datasets:ds},options:singleOpts()});
+      borderWidth:1.5,borderRadius:8,borderSkipped:false,maxBarThickness:52}];
+    charts.cosMon=new Chart(ctx,{type:'bar',data:{labels:labs,datasets:ds},options:singleOpts()});
     document.getElementById('legendMonth').innerHTML='';
   }
 }
 
-/* ═══════════════════════════════════════════════
-   CHART FACTORIES
-═══════════════════════════════════════════════ */
-var TOOLTIP_BASE = {
-  backgroundColor:'#1e2a3d',
-  borderColor:'rgba(255,255,255,0.1)',
-  borderWidth:1,
-  titleColor:'#f8fafc',
-  bodyColor:'#94a3b8',
-  padding:14, cornerRadius:10,
-  displayColors:true
-};
+/* ── Chart factories ── */
+var TT={backgroundColor:'#1e2a3d',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,titleColor:'#f8fafc',bodyColor:'#94a3b8',padding:14,cornerRadius:10,displayColors:true};
 
-function makeBar(id, labels, data, c1, c2) {
+function makeBar(id,labels,data,c1,c2) {
   if(charts[id]) charts[id].destroy();
   var ctx=document.getElementById(id).getContext('2d');
   var grad=ctx.createLinearGradient(0,0,0,220);
-  grad.addColorStop(0, c1+'dd'); grad.addColorStop(1, c1+'22');
-  charts[id]=new Chart(ctx,{
-    type:'bar',
+  grad.addColorStop(0,c1+'dd'); grad.addColorStop(1,c1+'22');
+  charts[id]=new Chart(ctx,{type:'bar',
     data:{labels:labels,datasets:[{data:data,backgroundColor:grad,borderColor:c1,borderWidth:2,borderRadius:6,borderSkipped:false,maxBarThickness:56}]},
-    options:{
-      responsive:true, maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:{...TOOLTIP_BASE,callbacks:{label:function(c){return '  '+c.parsed.y.toLocaleString('es-EC');},title:function(items){return '📅 '+items[0].label;}}}},
-      scales:{
-        x:{grid:{display:false},border:{color:'rgba(255,255,255,0.06)'},ticks:{color:'#475569',font:{family:"'JetBrains Mono'",size:11}}},
-        y:{grid:{color:'rgba(255,255,255,0.04)',lineWidth:1},border:{color:'transparent'},ticks:{color:'#475569',font:{family:"'JetBrains Mono'",size:11}}}
-      }
-    }
-  });
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:function(c){return '  '+c.parsed.y.toLocaleString('es-EC');},title:function(items){return '📅 '+items[0].label;}}}},
+      scales:{x:{grid:{display:false},border:{color:'rgba(255,255,255,0.06)'},ticks:{color:'#475569',font:{family:"'JetBrains Mono'",size:11}}},
+        y:{grid:{color:'rgba(255,255,255,0.04)'},border:{color:'transparent'},ticks:{color:'#475569',font:{family:"'JetBrains Mono'",size:11}}}}}});
 }
 
-function makeDonut(id, labels, data) {
+function makeDonut(id,labels,data) {
   if(charts[id]) charts[id].destroy();
   var ctx=document.getElementById(id).getContext('2d');
-  charts[id]=new Chart(ctx,{
-    type:'doughnut',
+  charts[id]=new Chart(ctx,{type:'doughnut',
     data:{labels:labels,datasets:[{data:data,backgroundColor:PAL.slice(0,labels.length).map(function(c){return c+'cc';}),borderColor:PAL.slice(0,labels.length),borderWidth:2,hoverOffset:6}]},
-    options:{
-      responsive:true, maintainAspectRatio:true, cutout:'68%',
-      plugins:{legend:{display:false},tooltip:{...TOOLTIP_BASE,callbacks:{label:function(c){var total=c.dataset.data.reduce(function(a,b){return a+b;},0); return '  '+c.parsed.toLocaleString('es-EC')+' ('+Math.round(c.parsed/total*100)+'%)';}}}},
-    }
-  });
+    options:{responsive:true,maintainAspectRatio:true,cutout:'68%',
+      plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:function(c){var t=c.dataset.data.reduce(function(a,b){return a+b;},0);return ' '+c.parsed.toLocaleString('es-EC')+' ('+Math.round(c.parsed/t*100)+'%)';}}}}},
+    });
 }
 
-function buildDonutStats(containerId, labels, data, palette) {
+function buildDonutStats(cid,labels,data,palette) {
   var total=data.reduce(function(a,b){return a+b;},0);
-  var el=document.getElementById(containerId);
-  el.innerHTML=labels.slice(0,4).map(function(lbl,i){
+  var el=document.getElementById(cid);
+  if(!el) return;
+  el.innerHTML=labels.slice(0,5).map(function(lbl,i){
     var pct=total>0?Math.round(data[i]/total*100):0;
-    return '<div class="donut-stat">'+
-      '<div class="ds-head">'+
-        '<span class="ds-label">'+lbl+'</span>'+
-        '<span class="ds-val">'+data[i].toLocaleString('es-EC')+'</span>'+
-      '</div>'+
-      '<div class="ds-bar"><div class="ds-fill" style="width:'+pct+'%;background:'+palette[i%palette.length]+'"></div></div>'+
-    '</div>';
+    return '<div class="donut-stat"><div class="ds-head"><span class="ds-label">'+lbl+'</span><span class="ds-val">'+data[i].toLocaleString('es-EC')+' ('+pct+'%)</span></div>'+
+      '<div class="ds-bar"><div class="ds-fill" style="width:'+pct+'%;background:'+palette[i%palette.length]+'"></div></div></div>';
   }).join('');
 }
 
-function buildLegend(containerId, series) {
-  document.getElementById(containerId).innerHTML = series.map(function(s,i){
-    return '<div class="leg-item"><div class="leg-dot" style="background:'+PAL[i%PAL.length]+'"></div>'+s+'</div>';
+function buildLegend(cid,series,totals) {
+  var el=document.getElementById(cid);
+  if(!el) return;
+  el.innerHTML=series.map(function(s,i){
+    var tot=(totals&&totals[i])?(' · '+totals[i].toLocaleString('es-EC')+' usos'):'';
+    return '<div class="leg-item"><div class="leg-dot" style="background:'+PAL[i%PAL.length]+'"></div>'+s+tot+'</div>';
   }).join('');
 }
 
 function stackedOpts() {
-  return {
-    responsive:true, maintainAspectRatio:false,
-    plugins:{legend:{display:false},tooltip:{...TOOLTIP_BASE,mode:'index',intersect:false}},
-    scales:{
-      x:{stacked:true,grid:{display:false},border:{color:'rgba(255,255,255,0.06)'},ticks:{color:'#475569',font:{family:"'JetBrains Mono'",size:11}}},
-      y:{stacked:true,grid:{color:'rgba(255,255,255,0.04)'},border:{color:'transparent'},ticks:{color:'#475569',font:{family:"'JetBrains Mono'",size:11}}}
-    }
-  };
+  return{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{...TT,mode:'index',intersect:false}},
+    scales:{x:{stacked:true,grid:{display:false},border:{color:'rgba(255,255,255,0.06)'},ticks:{color:'#475569',font:{family:"'JetBrains Mono'",size:11}}},
+      y:{stacked:true,grid:{color:'rgba(255,255,255,0.04)'},border:{color:'transparent'},ticks:{color:'#475569',font:{family:"'JetBrains Mono'",size:11}}}}};
 }
 
 function singleOpts() {
-  return {
-    responsive:true, maintainAspectRatio:false,
-    plugins:{legend:{display:false},tooltip:{...TOOLTIP_BASE}},
-    scales:{
-      x:{grid:{display:false},border:{color:'rgba(255,255,255,0.06)'},ticks:{color:'#475569',font:{family:"'JetBrains Mono'",size:10},maxRotation:30}},
-      y:{grid:{color:'rgba(255,255,255,0.04)'},border:{color:'transparent'},ticks:{color:'#475569',font:{family:"'JetBrains Mono'",size:11}}}
-    }
-  };
+  return{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{...TT}},
+    scales:{x:{grid:{display:false},border:{color:'rgba(255,255,255,0.06)'},ticks:{color:'#475569',font:{family:"'JetBrains Mono'",size:10},maxRotation:30}},
+      y:{grid:{color:'rgba(255,255,255,0.04)'},border:{color:'transparent'},ticks:{color:'#475569',font:{family:"'JetBrains Mono'",size:11}}}}};
 }
 
 function destroyCharts(){Object.values(charts).forEach(function(c){try{c.destroy();}catch(e){}});charts={};}
 
 /* ═══════════════════════════════════════════════
-   DEMO DATA
+   DEMO DATA — Refleja estructura real de los datos
+   DATA: solo tiene "Recarga" en col G
+   USOS: tiene ENROLL y OTRAS CAMPAÑAS
 ═══════════════════════════════════════════════ */
-function getDemoData(){
+function getDemoData() {
   return {
-    parte1:{totalTarjetasEntregadas:1248,ventaByMonth:{'2026-04':412,'2026-05':521,'2026-06':315}},
-    parte2:{totalRecarga:8743,recargaByMonth:{'2026-04':2104,'2026-05':3216,'2026-06':3423},uniqueRecargaCards:987},
-    parte3:{totalTarjetasUtilizadas:1186,totalUsos:24310,valorTotalUsos:10939.50},
-    cosechas:{
-      labels:['2026-04','2026-05','2026-06'],
-      series:['Cosecha Abr 26','Cosecha May 26','Cosecha Jun 26','Otras Cosechas'],
-      data:[[1840,2310,2680],[0,1420,2105],[0,0,980],[264,510,201]],
-      totals:[6830,3525,980,975]
-    }
+    parte1: {
+      // En el archivo real, DATA no muestra ventas visibles en la muestra,
+      // pero el sistema las buscará. Demo muestra valores representativos.
+      totalTarjetasEntregadas: 1248,
+      tarjetasUnicas: 1201,
+      ventaByMonth: {'2026-04':412,'2026-05':521,'2026-06':315}
+    },
+    parte2: {
+      totalRecarga: 8743,
+      recargaByMonth: {'2026-04':2893,'2026-05':3127,'2026-06':2723},
+      uniqueRecargaCards: 1054
+    },
+    parte3: {
+      totalTarjetasUtilizadas: 987,
+      totalTarjetasEnroll: 623,
+      totalUsos: 24310,
+      totalUsosEnroll: 15840,
+      valorTotalUsos: 10939.50,
+      usosByMonth: {'2026-04':7420,'2026-05':9180,'2026-06':7710},
+      usosEnrollByMonth: {'2026-04':4830,'2026-05':5960,'2026-06':5050}
+    },
+    cosechas: {
+      labels: ['2026-04','2026-05','2026-06'],
+      series: ['Cosecha 2026-04','Cosecha 2026-05','Cosecha 2026-06','Otras Cosechas'],
+      data: [
+        [3210,4120,3890],
+        [0,2640,3100],
+        [0,0,1820],
+        [310,420,400]
+      ],
+      totals: [11220,5740,1820,1130],
+      grandTotal: 19910
+    },
+    meta: { dataRows: 850, usosRows: 24310, sheets: ['DATA','USOS'] }
   };
 }
+
 </script>
 </body>
 </html>
