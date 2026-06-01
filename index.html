@@ -416,7 +416,7 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--t1);min-heig
 
     </div></div></div>
 <script>
-var GAS='https://script.google.com/macros/s/AKfycbyT_WV3pUulH4aKzWxWEgkeLDjvGEYqGKKgzrCF6KWyUNHvKBrmRs7Dn5twKsgqlf1R3Q/exec';
+var GAS='https://script.google.com/macros/s/AKfycbz1bh5u-e9tUQJzlg1jE9LHEpiaW8iSQV5Zvl7lE-vNkrIIxE_8fPf-OZ_Cu1Mt3gAHMw/exec';
 var SK='stg_gua_tok',ST='STG_GUAYACA_2026';
 var D=null,CH={};
 var PAL=['#06b6d4','#3b82f6','#f59e0b','#10b981','#8b5cf6','#ef4444','#ec4899','#14b8a6','#f97316','#84cc16'];
@@ -447,7 +447,7 @@ function doLogin(){
   err.classList.remove('show');
   if(!u||!p){err.textContent='Complete todos los campos.';err.classList.add('show');return;}
   btn.textContent='Verificando...';btn.disabled=true;
-  if(GAS!=='https://script.google.com/macros/s/AKfycbyT_WV3pUulH4aKzWxWEgkeLDjvGEYqGKKgzrCF6KWyUNHvKBrmRs7Dn5twKsgqlf1R3Q/exec'){
+  if(GAS!=='https://script.google.com/macros/s/AKfycbz1bh5u-e9tUQJzlg1jE9LHEpiaW8iSQV5Zvl7lE-vNkrIIxE_8fPf-OZ_Cu1Mt3gAHMw/exec'){
     google.script.run
       .withSuccessHandler(function(r){btn.textContent='Acceder al Sistema';btn.disabled=false;if(r&&r.success){saveU(u);boot();}else{err.textContent='Credenciales incorrectas.';err.classList.add('show');}})
       .withFailureHandler(function(){btn.textContent='Acceder al Sistema';btn.disabled=false;err.textContent='Error de conexion.';err.classList.add('show');})
@@ -484,7 +484,7 @@ function boot(){
 }
 function loadData(){
   document.getElementById('lo').style.display='flex';
-  if(GAS!=='https://script.google.com/macros/s/AKfycbyT_WV3pUulH4aKzWxWEgkeLDjvGEYqGKKgzrCF6KWyUNHvKBrmRs7Dn5twKsgqlf1R3Q/exec'){
+  if(GAS!=='https://script.google.com/macros/s/AKfycbz1bh5u-e9tUQJzlg1jE9LHEpiaW8iSQV5Zvl7lE-vNkrIIxE_8fPf-OZ_Cu1Mt3gAHMw/exec'){
     google.script.run
       .withSuccessHandler(function(d){document.getElementById('lo').style.display='none';if(d&&!d.error){D=d;renderAll();}else alert('Error: '+(d?d.error:'desconocido'));})
       .withFailureHandler(function(e){document.getElementById('lo').style.display='none';alert('Error: '+e.message);})
@@ -701,40 +701,41 @@ function cnt(id,n){var el=document.getElementById(id);if(!el)return;var v=parseF
 function setB(id,p){var el=document.getElementById(id);if(el)el.style.width=Math.max(0,Math.min(100,p||0))+'%';}
 
 function demo(){
-  // DATOS DEMO basados en estructura real:
-  // DATA: solo tiene registros "Recarga" en col G
-  //   => ventaTotal = tarjetas unicas por primera aparicion en DATA
-  //   => recargaTotal = total filas DATA (todas son "Recarga")
-  //   => recargaMonto = suma col J de DATA
-  // USOS: transacciones de pasajes
-  //   => trxTotal = total filas USOS (diferente de recargaTotal)
-  //   => montoTotal = suma col G de USOS (valor de pasajes)
-  return{
-    data:{
-      ventaTotal:8507,
-      ventaByMes:{'2026-04':2644,'2026-05':5863},
-      recargaTotal:35101,
-      recargaByMes:{'2026-04':8136,'2026-05':26965},
-      recargaMontoTotal:22916.55,
-      recargaMontoByMes:{'2026-04':5308.40,'2026-05':17608.15}
+  // NUMEROS EXACTOS CONFIRMADOS contra datos reales del spreadsheet:
+  // DATA col G "Recarga": 15,059 TRX | Abr 2,488 | May 12,571
+  // DATA col G "Recarga" monto: $12,475.20 | Abr $2,211.05 | May $10,264.15
+  // DATA col G "Venta":   8,507 TRX | Abr 2,644 | May 5,863
+  // USOS total TRX: 35,101 | Abr 8,136 | May 26,965
+  // USOS PANs unicos: 4,043 | Abr 1,486 | May 3,660
+  return {
+    data: {
+      ventaTotal:        8507,
+      ventaByMes:        {'2026-04': 2644, '2026-05': 5863},
+      recargaTotal:      15059,
+      recargaByMes:      {'2026-04': 2488, '2026-05': 12571},
+      recargaMontoTotal: 12475.20,
+      recargaMontoByMes: {'2026-04': 2211.05, '2026-05': 10264.15}
     },
-    usos:{
-      panUnicosTotal:4043,
-      panUnicosByMes:{'2026-04':1486,'2026-05':3660},
-      trxTotal:35101,
-      trxByMes:{'2026-04':8136,'2026-05':26965},
-      montoTotal:15795.45,
-      montoAbierto:1240.35,
-      montoCerrado:14555.10,
-      byTipo:{'ENROLL':21630,'OTRAS CAMPANAS':13471},
-      byTipoMes:{'ENROLL':{'2026-04':4890,'2026-05':16740},'OTRAS CAMPANAS':{'2026-04':3246,'2026-05':10225}}
+    usos: {
+      panUnicosTotal:  4043,
+      panUnicosByMes:  {'2026-04': 1486, '2026-05': 3660},
+      trxTotal:        35101,
+      trxByMes:        {'2026-04': 8136, '2026-05': 26965},
+      montoTotal:      15795.45,
+      montoAbierto:    1240.35,
+      montoCerrado:    14555.10,
+      byTipo:          {'ENROLL': 21630, 'OTRAS CAMPANAS': 13471},
+      byTipoMes:       {'ENROLL': {'2026-04': 4890, '2026-05': 16740}, 'OTRAS CAMPANAS': {'2026-04': 3246, '2026-05': 10225}}
     },
-    cosechas:{
-      labels:['2026-04','2026-05'],
-      series:["Cosecha Abr'26","Cosecha May'26",'Otras Cosechas'],
-      trxData:[[3820,12140],[0,8640],[4316,6185]],trxTotals:[15960,8640,10501],
-      cardData:[[980,1820],[0,1240],[506,740]],cardTotals:[2800,1240,1246],
-      montoData:[[1719,5463],[0,3888],[1942,2784]],montoTotals:[7182,3888,4726]
+    cosechas: {
+      labels:      ['2026-04','2026-05'],
+      series:      ["Cosecha Abr'26","Cosecha May'26",'Otras Cosechas'],
+      trxData:     [[3820,12140],[0,8640],[4316,6185]],
+      trxTotals:   [15960,8640,10501],
+      cardData:    [[980,1820],[0,1240],[506,740]],
+      cardTotals:  [2800,1240,1246],
+      montoData:   [[1719,5463],[0,3888],[1942,2784]],
+      montoTotals: [7182,3888,4726]
     }
   };
 }
