@@ -1302,7 +1302,7 @@ body {
 /* ═══════════════════════════════════════════════
    CONFIG & STATE
 ═══════════════════════════════════════════════ */
-var GAS_URL       = 'YOUR_DEPLOYED_GAS_URL_HERE';
+var GAS_URL       = 'https://script.google.com/macros/s/AKfycbxPYc5aA4dY85Y4qyPwTZTlIfUSpwfamg9rZkSnYiewtG8a4d4jBErvd8oxEvJgt5dvUw/exec';
 var SESSION_KEY   = 'stg_guayaca_token';
 var SESSION_TOKEN = 'STG_GUAYACA_SESSION_2026';
 
@@ -1368,7 +1368,7 @@ function bootDash(){ document.getElementById('loginScreen').style.display='none'
 
 function loadData(){
   document.getElementById('loadingOverlay').style.display='flex';
-  if(GAS_URL!=='https://script.google.com/macros/s/AKfycbxPYc5aA4dY85Y4qyPwTZTlIfUSpwfamg9rZkSnYiewtG8a4d4jBErvd8oxEvJgt5dvUw/exec'){
+  if(GAS_URL!=='YOUR_DEPLOYED_GAS_URL_HERE'){
     google.script.run
       .withSuccessHandler(function(d){ document.getElementById('loadingOverlay').style.display='none'; if(d&&!d.error){dashData=d;renderAll();}else alert('Error: '+(d?d.error:'desconocido')); })
       .withFailureHandler(function(e){ document.getElementById('loadingOverlay').style.display='none'; alert('Error: '+e.message); })
@@ -1537,7 +1537,7 @@ function makeBarAndDonut(barId,donutId,statsId,labels,data,color){
   makeBar2(barId,labels,data,color);
   if(charts[donutId])charts[donutId].destroy();
   var ctx=getCtx(donutId); if(!ctx)return;
-  charts[donutId]=new Chart(ctx,{type:'doughnut',data:{labels:labels,datasets:[{data:data,backgroundColor:PAL.slice(0,labels.length).map(function(c){return c+'cc';}),borderColor:PAL.slice(0,labels.length),borderWidth:2,hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:true,cutout:'68%',plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:function(c){var t=c.dataset.data.reduce(function(a,b){return a+b;},0);return ' '+c.parsed.toLocaleString('es-EC')+' ('+Math.round(c.parsed/t*100)+'%)';}}}}}}); 
+  charts[donutId]=new Chart(ctx,{type:'doughnut',data:{labels:labels,datasets:[{data:data,backgroundColor:PAL.slice(0,labels.length).map(function(c){return c+'cc';}),borderColor:PAL.slice(0,labels.length),borderWidth:2,hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:true,cutout:'68%',plugins:{legend:{display:false},tooltip:{backgroundColor:'#1e2a3d',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,titleColor:'#f8fafc',bodyColor:'#94a3b8',padding:14,cornerRadius:10,displayColors:true,callbacks:{label:function(c){var t=c.dataset.data.reduce(function(a,b){return a+b;},0);return ' '+c.parsed.toLocaleString('es-EC')+' ('+Math.round(c.parsed/t*100)+'%)';}}}}}}); 
   buildDonutStats(statsId,labels,data);
 }
 
@@ -1547,7 +1547,7 @@ function makeBar2(id,labels,data,color){
   var grad=ctx.createLinearGradient(0,0,0,220);
   grad.addColorStop(0,color+'dd'); grad.addColorStop(1,color+'22');
   charts[id]=new Chart(ctx,{type:'bar',data:{labels:labels,datasets:[{data:data,backgroundColor:grad,borderColor:color,borderWidth:2,borderRadius:6,borderSkipped:false,maxBarThickness:56}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:function(c){return '  '+c.parsed.y.toLocaleString('es-EC');},title:function(i){return '📅 '+i[0].label;}}}},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#1e2a3d',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,titleColor:'#f8fafc',bodyColor:'#94a3b8',padding:14,cornerRadius:10,displayColors:true,callbacks:{label:function(c){return '  '+c.parsed.y.toLocaleString('es-EC');},title:function(i){return '📅 '+i[0].label;}}}},
       scales:{x:{grid:{display:false},border:{color:'rgba(255,255,255,0.06)'},ticks:{color:'#475569',font:{family:"'JetBrains Mono'",size:11}}},y:{grid:{color:'rgba(255,255,255,0.04)'},border:{color:'transparent'},ticks:{color:'#475569',font:{family:"'JetBrains Mono'",size:11}}}}}});
   return charts[id];
 }
@@ -1569,10 +1569,10 @@ function buildLegend(cid,series,totals){
   }).join('');
 }
 
-function stackedOpts(){return{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...TT,mode:'index',intersect:false}},scales:{x:{stacked:true,grid:{display:false},border:{color:'rgba(255,255,255,0.06)'},ticks:{color:'#475569',font:{family:"'JetBrains Mono'",size:11}}},y:{stacked:true,grid:{color:'rgba(255,255,255,0.04)'},border:{color:'transparent'},ticks:{color:'#475569',font:{family:"'JetBrains Mono'",size:11}}}}};}
-function singleOpts(){return{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...TT}},scales:{x:{grid:{display:false},border:{color:'rgba(255,255,255,0.06)'},ticks:{color:'#475569',font:{family:"'JetBrains Mono'",size:10},maxRotation:30}},y:{grid:{color:'rgba(255,255,255,0.04)'},border:{color:'transparent'},ticks:{color:'#475569',font:{family:"'JetBrains Mono'",size:11}}}}};}
+function stackedOpts(){return{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#1e2a3d',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,titleColor:'#f8fafc',bodyColor:'#94a3b8',padding:14,cornerRadius:10,displayColors:true,mode:'index',intersect:false}},scales:{x:{stacked:true,grid:{display:false},border:{color:'rgba(255,255,255,0.06)'},ticks:{color:'#475569',font:{family:"'JetBrains Mono'",size:11}}},y:{stacked:true,grid:{color:'rgba(255,255,255,0.04)'},border:{color:'transparent'},ticks:{color:'#475569',font:{family:"'JetBrains Mono'",size:11}}}}};}
+function singleOpts(){return{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#1e2a3d',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,titleColor:'#f8fafc',bodyColor:'#94a3b8',padding:14,cornerRadius:10,displayColors:true}},scales:{x:{grid:{display:false},border:{color:'rgba(255,255,255,0.06)'},ticks:{color:'#475569',font:{family:"'JetBrains Mono'",size:10},maxRotation:30}},y:{grid:{color:'rgba(255,255,255,0.04)'},border:{color:'transparent'},ticks:{color:'#475569',font:{family:"'JetBrains Mono'",size:11}}}}};}
 function getCtx(id){var el=document.getElementById(id);return el?el.getContext('2d'):null;}
-function destroyCharts(){Object.values(charts).forEach(function(c){try{c.destroy();}catch(e){}});charts={};}
+function destroyCharts(){Object.keys(charts).forEach(function(k){try{charts[k].destroy();}catch(e){}});charts={};}
 
 /* ═══ DEMO DATA — números reales validados ═══
    Total tarjetas entregadas (únicas DATA): 8,507
